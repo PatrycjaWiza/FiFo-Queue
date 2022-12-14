@@ -20,15 +20,15 @@ class Queue {
 
             [`${elementId1}-next`]: elementId2,
             [`${elementId1}-prev`]: '',
-            [`${elementId1}-value`]: '',
+            [`${elementId1}-value`]: elementId1,
 
-            [`${elementId2}-next`]: '',
-            [`${elementId2}-prev`]: '',
+            [`${elementId2}-next`]: elementId3,
+            [`${elementId2}-prev`]: elementId1,
             [`${elementId2}-value`]: elementId2,
 
             [`${elementId3}-next`]: elementId2,
             [`${elementId3}-prev`]: '',
-            [`${elementId3}-value`]: '',
+            [`${elementId3}-value`]: elementId3,
 
             [`${this.#SomeFifoName}Tail`]: elementId3,
             [`${this.#SomeFifoName}LastIndex`]: id3,
