@@ -1,13 +1,14 @@
-// //Worker pseudo kod
-// loop:
-//   cost timeOut = randA.los()*40
-//   cost data = randB.los()
-//   sleep(timeOut)
-//   fifo.push(data)
-// //Głowny wątek
-// loop:
-//   cost timeOut = randC.los()*40
-//   cost shoudRecive = randB'.los() //Ten generator ma takie same seed jak randB
-//   sleep(timeout)
-//   cost data = fifo.pop()
-//   if(data!=shoudRecive) print error
+// import { fifo } from './index';
+
+// const test = () => {
+//   const randA = Math.random();
+//   for (let i = 0; i < 4; i++) {
+//     const data = randA;
+//     fifo.push_head(data)[i];
+//   }
+//   const shouldReceive = randA;
+//   const data = fifo.pop_tail();
+//   if (shouldReceive != data) {
+//     console.error();
+//   }
+// };

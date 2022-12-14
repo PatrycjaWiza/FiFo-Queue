@@ -5,47 +5,56 @@ class Queue {
   #SomeFifoName;
   constructor(SomeFifoName) {
     this.#SomeFifoName = SomeFifoName;
-    const id = uuidv4();
-    const elementId = `${this.#SomeFifoName}Element-${id}`;
-    const getStorage = () => {
-      return localForage.getItem(this.#SomeFifoName);
-    };
-    //fix null value - does not goes through this step
-    if (!getStorage(this.#SomeFifoName)) {
-      localForage.setItem(this.#SomeFifoName, {
-        [`${this.#SomeFifoName}Head`]: elementId,
-        [`${elementId}-next`]: '',
-        [`${elementId}-prev`]: '',
-        [`${elementId}-value`]: elementId,
-        [`${this.#SomeFifoName}Tail`]: elementId,
-        [`${this.#SomeFifoName}LastIndex`]: id,
-      });
-    } else {
-      const getLastIndex = () => {
-        getStorage(this.#SomeFifoName).then(
-          res => res[`${this.#SomeFifoName}LastIndex`]
-        );
-      };
-      localForage.setItem(this.#SomeFifoName, {
-        ...localForage.getItem(this.#SomeFifoName),
-        [`${this.#SomeFifoName}Head`]: elementId,
-        [`${elementId}-next`]: '',
-        [`${elementId}-prev`]: getLastIndex(),
-        [`${elementId}-value`]: elementId,
-        [`${this.#SomeFifoName}LastIndex`]: id,
-      });
-    }
+    const id1 = uuidv4();
+    const id2 = uuidv4();
+    const id3 = uuidv4();
+    const elementId1 = `${this.#SomeFifoName}Element-${id1}`;
+    const elementId2 = `${this.#SomeFifoName}Element-${id2}`;
+    const elementId3 = `${this.#SomeFifoName}Element-${id3}`;
+    localForage
+      .getItem(this.#SomeFifoName)
+      .then(res => {
+        if (res === null) {
+          localForage.setItem(this.#SomeFifoName, {
+            [`${this.#SomeFifoName}Head`]: '',
+
+            [`${elementId1}-next`]: elementId2,
+            [`${elementId1}-prev`]: '',
+            [`${elementId1}-value`]: '',
+
+            [`${elementId2}-next`]: '',
+            [`${elementId2}-prev`]: '',
+            [`${elementId2}-value`]: elementId2,
+
+            [`${elementId3}-next`]: elementId2,
+            [`${elementId3}-prev`]: '',
+            [`${elementId3}-value`]: '',
+
+            [`${this.#SomeFifoName}Tail`]: elementId3,
+            [`${this.#SomeFifoName}LastIndex`]: id3,
+          });
+        } else {
+          console.log(res);
+          localForage.setItem(this.#SomeFifoName, { ...res });
+        }
+      })
+      .catch(err => console.log(err));
   }
   push_head(element) {
-    getStorage(this.#SomeFifoName).then(res => {
+    localForage.getItem(this.#SomeFifoName).then(res => {
       localForage.setItem(this.#SomeFifoName, {
         ...res,
         [`${this.#SomeFifoName}Head`]: element,
       });
+      console.log(
+        `The value of the element ${
+          this.#SomeFifoName
+        }Head have been changed to ${element}`
+      );
     });
   }
   pop_tail() {
-    return getStorage(this.#SomeFifoName).then(res => {
+    return localForage.getItem(this.#SomeFifoName).then(res => {
       return (
         delete res[`${this.#SomeFifoName}Tail`],
         localForage.setItem(this.#SomeFifoName, res)
@@ -53,21 +62,16 @@ class Queue {
     });
   }
   tail() {
-    return getStorage(this.#SomeFifoName).then(res =>
-      console.log(
-        `Tail element ${this.#SomeFifoName}LastIndex: `,
-        res[`${this.#SomeFifoName}LastIndex`]
-      )
-    );
+    localForage
+      .getItem(this.#SomeFifoName)
+      .then(res => res[`${this.#SomeFifoName}Tail`])
+      .catch(err => err);
   }
   head() {
-    return getStorage(this.#SomeFifoName).then(res =>
-      console.log(
-        `Head element ${this.#SomeFifoName}Head: `,
-        res[`${this.#SomeFifoName}Head`]
-      )
-    );
+    localForage
+      .getItem(this.#SomeFifoName)
+      .then(res => res[`${this.#SomeFifoName}Head`])
+      .catch(err => err);
   }
 }
-
-const fifo = new Queue('SomeFifoName');
+export const fifo = new Queue('SomeFifoName');
